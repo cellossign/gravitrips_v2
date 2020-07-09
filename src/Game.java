@@ -22,7 +22,7 @@ public class Game {
             }
             try {
                 int playerChosenColumn = currentPlayer.move();
-                if (isAvailable(playerChosenColumn)) {
+                if (columnIsAvailable(playerChosenColumn)) {
                     countChances = 1;
                     makeMove(playerChosenColumn);
                     if (existsWinner() || deskIsFull()) {
@@ -40,11 +40,10 @@ public class Game {
             } catch (Exception e) {
                 System.out.println("Oops! Undefiend exception: " + Arrays.toString(e.getStackTrace()));
             }
-
         }
     }
 
-    private static boolean isAvailable(int playerChosenColumn) {
+    private static boolean columnIsAvailable(int playerChosenColumn) {
         return desk.getFields()[0][playerChosenColumn - 1] == FieldValue.c;
     }
 
