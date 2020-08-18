@@ -1,4 +1,5 @@
 public class Desk {
+
     private static int columns;
     private FieldValue[][] fields;
     private static final Desk instance = new Desk();
@@ -34,7 +35,6 @@ public class Desk {
         System.out.println();
     }
 
-
     public void putChipInColumn(int column, FieldValue chip) {
         for (int i = (columns - 1); i >= 0; i--) {
             if (fields[i][column - 1] == FieldValue.c) {
@@ -44,109 +44,93 @@ public class Desk {
         }
     }
 
-    public boolean checkIfIsFull() {
-        boolean isFull = true;
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (fields[i][j] == FieldValue.c) {
-                    isFull = false;
-                    break;
-                }
+    public boolean deskIfIsFull() {
+        for (int i = 0; i < columns; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (fields[i][j] == FieldValue.c) return false;
             }
         }
-        return isFull;
+        return true;
     }
 
 
     public boolean checkWinnerByRows() {
-        int score = 0;
-        boolean won = false;
-
         for (int i = 0; i < 6; i++) {
             int count = 1;
             for (int j = 0; j < 5; j++) {
-                if ((fields[i][j] == fields[i][j + 1])
-                        &&
-                        ((fields[i][j] == FieldValue.O) || (fields[i][j] == FieldValue.X))
-                ) {
-                    count++;
-                    // System.out.println("the same in " + (i + 1) + " row: " + count);
-                    if (count > 3) {
-                        score = count;
-                    }
-                } else {
-                    count = 1;
+                count = identicalsInRow(count, i, j);
+                if (count > 3) {
+                    return true;
                 }
             }
-            if (score > 3) {
-                won = true;
-                System.out.println("Same chips in the " + (i + 1) + ". row: " + count);
-//
-                break;
-            }
         }
-        return won;
+        return false;
+    }
+
+    private int identicalsInRow(int count, int i, int j) {
+        if (fields[i][j] == FieldValue.c) return count;
+        else if (fields[i][j] == fields[i][j + 1]) {
+            count++;
+//            System.out.println(count + " identical chips in row #" + (i + 1) + "\n");
+        } else count = 1;
+        return count;
     }
 
     public boolean checkWinnerByColumns() {
-        int score = 0;
-        boolean won = false;
         for (int j = 0; j < 6; j++) {
             int count = 1;
             for (int i = 0; i < 5; i++) {
-                if ((fields[i][j] == fields[i + 1][j])
-                        &&
-                        ((fields[i][j] == FieldValue.O) || (fields[i][j] == FieldValue.X))
-                ) {
-                    count++;
-//                    System.out.println("The same in " + (j + 1) + " column: " + count);
-                    if (count > 3) {
-                        score = count;
-                    }
-                } else {
-                    count = 1;
+                count = identicalsInColumn(count, i, j);
+                if (count > 3) {
+                    return true;
                 }
             }
-            if (score > 3) {
-                System.out.println("The same in " + (j + 1) + " column: " + count);
-//
-                won = true;
-                break;
-            }
         }
-        return won;
+        return false;
+    }
+
+    private int identicalsInColumn(int count, int i, int j) {
+        if (fields[i][j] == FieldValue.c) return count;
+        else if (fields[i][j] == fields[i + 1][j]) {
+            count++;
+//            System.out.println(count + " identical chips in column #" + (j + 1) + "\n");
+        } else count = 1;
+        return count;
     }
 
     public boolean checkWinnerByDiagonal() {
-        boolean won = false;
-
         for (int i = 5; i > 2; i--) {
             for (int j = 0; j < 3; j++) {
-                if (((fields[i][j] == fields[i - 1][j + 1]) &&
-                        (fields[i][j] == fields[i - 2][j + 2]) &&
-                        (fields[i][j] == fields[i - 3][j + 3]))
-                        &&
-                        ((fields[i][j] == FieldValue.O) || (fields[i][j] == FieldValue.X))
-                ) {
-                    System.out.println("the same are in diagonal [" + (i - 2) + "][" + (j + 4) + "]");
-                    won = true;
+                if (validDiagonalToLeft(i, j)) {
+//                    System.out.println("Identical chips in diagonal from [" +
+//                            (i - 2) + "][" + (j + 4) + "] to the left down");
+                    return true;
                 }
             }
             for (int j = 3; j < 6; j++) {
-                if (((fields[i][j] == fields[i - 1][j - 1]) &&
-                        (fields[i][j] == fields[i - 2][j - 2]) &&
-                        (fields[i][j] == fields[i - 3][j - 3]))
-                        &&
-                        ((fields[i][j] == FieldValue.O) || (fields[i][j] == FieldValue.X))
-                ) {
-                    System.out.println("the same are in diagonal [" + (i - 2) + "][" + (j - 3) + "]");
-                    won = true;
+                if (validDiagonalToRight(i, j)) {
+//                    System.out.println("Identical chips in diagonal from [" +
+//                            (i - 2) + "][" + (j - 2) + "] to the right");
+                    return true;
                 }
             }
         }
-        return won;
+        return false;
     }
 
+    private boolean validDiagonalToLeft(int i, int j) {
+        if (fields[i][j] == FieldValue.c) return false;
+        else return ((fields[i][j] == fields[i - 1][j + 1]) &&
+                (fields[i][j] == fields[i - 2][j + 2]) &&
+                (fields[i][j] == fields[i - 3][j + 3]));
+    }
+
+    private boolean validDiagonalToRight(int i, int j) {
+        if (fields[i][j] == FieldValue.c) return false;
+        else return (fields[i][j] == fields[i - 1][j - 1]) &&
+                (fields[i][j] == fields[i - 2][j - 2]) &&
+                (fields[i][j] == fields[i - 3][j - 3]);
+    }
 
     public static int getColumns() {
         return columns;

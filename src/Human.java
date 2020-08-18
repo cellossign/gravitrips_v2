@@ -1,22 +1,18 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Human extends Player {
-    private FieldValue chip;
-    public static Scanner sc = new Scanner(System.in);
+    public static Scanner sc;
 
     public Human(FieldValue chip) {
-        this.chip = chip;
-        super.setChip(this.chip);
+        super.setChip(chip);
     }
 
     @Override
     public int move() throws Exception {
         super.move();
-        //Scanner sc = new Scanner(System.in);
+        sc = new Scanner(System.in);
         int chosenColumn = sc.nextInt();
-        System.out.println(((chip == FieldValue.O) ? "First Player: " : "Second Player") + chosenColumn + " .column");
-        // sc.close();
+        moveMessage(chosenColumn);
         return chosenColumn;
     }
 }

@@ -21,7 +21,9 @@ public class Game {
                 break;
             }
             try {
+
                 int playerChosenColumn = currentPlayer.move();
+
                 if (columnIsAvailable(playerChosenColumn)) {
                     countChances = 1;
                     makeMove(playerChosenColumn);
@@ -34,6 +36,8 @@ public class Game {
                     fullColumnErrorMessage();
                     countChances++;
                 }
+
+
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException e) {
                 System.out.println("\n Please enter number in range 1 - " + Desk.getColumns() + "!" + "\n");
                 countChances++;
@@ -48,7 +52,7 @@ public class Game {
     }
 
     private static boolean deskIsFull() {
-        boolean isFull = desk.checkIfIsFull();
+        boolean isFull = desk.deskIfIsFull();
         if (isFull) {
             interruptAsNoWinner();
         }
@@ -65,7 +69,7 @@ public class Game {
 
     private static void showWinnerMessage() {
         System.out.println();
-        System.out.println("Game over. " + ((currentPlayer.getChip() == FieldValue.O) ? "First Player" : "Second Player") + " wins!");
+        System.out.println(((currentPlayer.getChip() == FieldValue.O) ? "First Player" : "Second Player") + " wins! Congratulations!");
     }
 
     private static void interruptAsNoWinner() {
